@@ -18,7 +18,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "json-server --watch https://github.com/jannesrsa//main/db.json"
+    "server": "json-server --watch https://github.com/jannesrsa/react-task-tracker/tree/main/db.json"
   },
   "eslintConfig": {
     "extends": [
