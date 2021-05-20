@@ -9,7 +9,7 @@ function App() {
 
   useEffect(
     () =>
-      fetch("tasks")
+      fetch("https://my-json-server.typicode.com/jannesrsa/react-task-tracker/tasks")
         .then((res) => res.json())
         .then(setTasks)
         .catch(console.error),
