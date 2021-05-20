@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/2d3abf5b-c0c1-42ca-9b74-0817c3e68c44/deploy-status)](https://app.netlify.com/sites/lucid-darwin-c61f17/deploys)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
