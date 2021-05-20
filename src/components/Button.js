@@ -1,8 +1,4 @@
-const Button = ({ colour, text }) => {
-  const onClick = () => {
-    console.log("clicke");
-  };
-
+const Button = ({ colour, text, onClick }) => {
   return (
     <button
       onClick={onClick}
