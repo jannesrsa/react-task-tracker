@@ -6,16 +6,31 @@ import AddTask from "./components/AddTask";
 function App() {
   const [showAdd, setShowAdd] = useState(false);
   const [tasks, setTasks] = useState([]);
+  const serverUrl = "http://localhost:5000";
+  // "https://my-json-server.typicode.com/jannesrsa/react-task-tracker";
 
   useEffect(
-    () =>
-      fetch("https://my-json-server.typicode.com/jannesrsa/react-task-tracker/tasks")
-        .then((res) => res.json())
-        .then(setTasks)
-        .catch(console.error),
+    () => getTasks(),
 
     []
   );
+
+  // Fetch data
+  const getTasks = () => {
+    fetch(`${serverUrl}/tasks`)
+      .then((res) => res.json())
+      .then(setTasks)
+      .catch(console.error);
+  };
+
+  // Fetch data
+  const deleteTask = (id) => {
+    fetch(`${serverUrl}/tasks/${id}`, { method: "DELETE" })
+      .then((res) => res.json())
+      .then(setTasks)
+      .then(getTasks)
+      .catch(console.error);
+  };
 
   // Add Task
   const addTask = (task) => {
@@ -28,11 +43,6 @@ function App() {
   // Delete Task
   const showAddTask = () => {
     setShowAdd(!showAdd);
-  };
-
-  // Delete Task
-  const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
   };
 
   // Toggle Reminder
