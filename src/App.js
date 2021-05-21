@@ -10,10 +10,10 @@ function App() {
     "https://development-dotnet-webapi.azurewebsites.net/api/v1";
   // "https://my-json-server.typicode.com/jannesrsa/react-task-tracker";
 
-  useEffect(() => getTasks(), []);
+  useEffect(() => fetchTasks(), []);
 
-  // Fetch data
-  const getTasks = () => {
+  // Fetch tasks
+  const fetchTasks = () => {
     fetch(`${serverUrl}/tasks`)
       .then((res) => res.json())
       .then(setTasks)
@@ -23,14 +23,17 @@ function App() {
   // Delete task
   const deleteTask = (id) => {
     fetch(`${serverUrl}/tasks/${id}`, { method: "DELETE" })
-      .then(getTasks)
+      .then(setTasks(tasks.filter((task) => task.id !== id)))
       .catch(console.error);
   };
 
   // Add Task
   const addTask = (task) => {
-    const id = tasks.length + 1;
+    const maxId = Math.max(...tasks.map((res) => res.id ?? 0), 0);
+    const id = maxId + 1;
+
     const newTask = { id, ...task };
+
     fetch(`${serverUrl}/tasks`, {
       method: "POST",
       headers: {
@@ -38,9 +41,9 @@ function App() {
       },
       body: JSON.stringify(newTask),
     })
-      .then(getTasks)
+      .then((response) => response.json())
+      .then((data) => setTasks([...tasks, data]))
       .catch(console.error);
-    setTasks([...tasks, newTask]);
   };
 
   // Toggle Add Form
@@ -50,16 +53,24 @@ function App() {
 
   // Toggle Reminder
   const toggleReminder = (id) => {
-    // const selectedTask = tasks.find((task) => task.id === id);
-    // selectedTask.reminder = !selectedTask.reminder;
+    const selectedTask = tasks.find((task) => task.id === id);
+    const updatedTask = { ...selectedTask, reminder: !selectedTask.reminder };
 
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, reminder: !task.reminder } : task
+    fetch(`${serverUrl}/tasks/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedTask),
+    })
+      .then(
+        setTasks(
+          tasks.map((task) =>
+            task.id === id ? { ...task, reminder: !task.reminder } : task
+          )
+        )
       )
-    );
-
-    // console.log(selectedTask.reminder);
+      .catch(console.error);
   };
 
   return (
