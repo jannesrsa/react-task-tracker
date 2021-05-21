@@ -6,14 +6,11 @@ import AddTask from "./components/AddTask";
 function App() {
   const [showAdd, setShowAdd] = useState(false);
   const [tasks, setTasks] = useState([]);
-  const serverUrl = "http://localhost:5000";
+  const serverUrl =
+    "https://development-dotnet-webapi.azurewebsites.net/api/v1";
   // "https://my-json-server.typicode.com/jannesrsa/react-task-tracker";
 
-  useEffect(
-    () => getTasks(),
-
-    []
-  );
+  useEffect(() => getTasks(), []);
 
   // Fetch data
   const getTasks = () => {
@@ -23,11 +20,9 @@ function App() {
       .catch(console.error);
   };
 
-  // Fetch data
+  // Delete task
   const deleteTask = (id) => {
     fetch(`${serverUrl}/tasks/${id}`, { method: "DELETE" })
-      .then((res) => res.json())
-      .then(setTasks)
       .then(getTasks)
       .catch(console.error);
   };
@@ -36,11 +31,19 @@ function App() {
   const addTask = (task) => {
     const id = tasks.length + 1;
     const newTask = { id, ...task };
-
+    fetch(`${serverUrl}/tasks`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newTask),
+    })
+      .then(getTasks)
+      .catch(console.error);
     setTasks([...tasks, newTask]);
   };
 
-  // Delete Task
+  // Toggle Add Form
   const showAddTask = () => {
     setShowAdd(!showAdd);
   };
