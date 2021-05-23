@@ -5,22 +5,36 @@ import AddTask from "./components/AddTask";
 import Footer from "./components/Footer";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import About from "./components/About";
+import { css } from "@emotion/react";
+import BarLoader from "react-spinners/BarLoader";
+
+// Can be a string as well. Need to ensure each key-value pair ends with ;
+const override = css`
+  display: block;
+  margin: 0 auto;
+`;
+
 function App() {
   const [showAdd, setShowAdd] = useState(false);
   const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const serverUrl =
     "https://development-dotnet-webapi.azurewebsites.net/api/v1";
   // "https://my-json-server.typicode.com/jannesrsa/react-task-tracker";
-
-  useEffect(() => fetchTasks(), []);
 
   // Fetch tasks
   const fetchTasks = () => {
     fetch(`${serverUrl}/tasks`)
       .then((res) => res.json())
-      .then(setTasks)
+      .then((returnedTasks) => {
+        setTasks(returnedTasks);
+        setLoading(false);
+      })
       .catch(console.error);
   };
+
+  useEffect(() => fetchTasks(), []);
 
   // Delete task
   const deleteTask = (id) => {
@@ -86,7 +100,9 @@ function App() {
           render={(props) => (
             <>
               {showAdd && <AddTask className="none" onAdd={addTask} />}
-              {tasks.length > 0 ? (
+              {loading === true ? (
+                <BarLoader loading={loading} css={override} size={150} />
+              ) : tasks.length > 0 ? (
                 <Tasks
                   tasks={tasks}
                   onDelete={deleteTask}
